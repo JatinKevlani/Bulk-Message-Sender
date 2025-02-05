@@ -1,0 +1,6 @@
+__pycache__/
+dist/
+build/
+testing materials/
+main.spec
+database_credentials.py
