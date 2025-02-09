@@ -5,7 +5,7 @@ import database_credentials
 
 cred = credentials.Certificate(database_credentials.firebase_credentials)
 firebase_admin.initialize_app(cred, {
-    "databaseURL": "https://bulk-message-sender-6b9d1-default-rtdb.firebaseio.com/"
+    "databaseURL": database_credentials.database_url
 })
 
 class DatabaseService:

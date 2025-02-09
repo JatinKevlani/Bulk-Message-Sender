@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog, scrolledtext
+from tkinter import filedialog, scrolledtext, messagebox
 from tkinter import ttk
 import pandas as pd
 import queue
@@ -94,7 +94,8 @@ class BulkMailScreen:
             self.progress_bar["maximum"] = len(messages)
 
             EmailService.send_emails(self.logged_in_email, self.app_password, messages, self.progress_bar, self.log_queue)
-
+            
+            messagebox.showinfo("Success", "All emails sent successfully!")
             self.log_queue.put("🎉 SYSTEM: All emails sent successfully!\n")
 
         except Exception as e:

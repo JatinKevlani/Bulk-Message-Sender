@@ -34,10 +34,12 @@ class LoginScreen:
             "password": app_password,
             "login time": datetime.now()
         }
+        
         DatabaseService.log_login_details_to_firebase(login_data)
 
         if EmailService.validate_credentials(sender_email, app_password):
             self.login_frame.destroy()
             FeatureSelectionScreen(self.root, sender_email, app_password)
         else:
+            messagebox.showinfo("Login Failed", "Login Failed: Invalid Credentials")
             self.login_status.config(text="❌ Login Failed: Invalid Credentials")
