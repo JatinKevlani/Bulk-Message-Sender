@@ -16,12 +16,12 @@ class EmailService:
             return False
 
     @staticmethod
-    def create_email(sender_email, recipient_email, subject, body, attachment_paths):
+    def create_email(sender_email, recipient_email, subject, body, attachment_paths, is_html=False):
         message = MIMEMultipart()
         message["From"] = sender_email
         message["To"] = recipient_email
         message["Subject"] = subject
-        message.attach(MIMEText(body, "plain"))
+        message.attach(MIMEText(body, "html" if is_html else "plain"))
 
         for attachment_path in attachment_paths:
             try:

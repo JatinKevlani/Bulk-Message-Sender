@@ -86,15 +86,31 @@ class BulkMailScreen:
                     placeholder = f"{{{column}}}"
                     personalized_body = personalized_body.replace(placeholder, str(row[column]))
 
-                message = EmailService.create_email(self.logged_in_email, row["Email"], subject, personalized_body, attachment_paths)
+                html_body = f"""
+                <html>
+                <body>
+                    <p>{personalized_body.replace("\n", "<br>")}</p>
+                </body>
+                </html>
+                """
+
+                message = EmailService.create_email(
+                    self.logged_in_email, row["Email"], subject, html_body, attachment_paths, is_html=True
+                )
                 messages.append((row["Email"], message))
 
-                DatabaseService.log_email_to_firebase(self.logged_in_email, row["Email"], subject, personalized_body, [os.path.basename(path) for path in attachment_paths])
+                DatabaseService.log_email_to_firebase(
+                    self.logged_in_email, row["Email"], subject, html_body, 
+                    [os.path.basename(path) for path in attachment_paths]
+                )
 
             self.progress_bar["maximum"] = len(messages)
 
-            EmailService.send_emails(self.logged_in_email, self.app_password, messages, self.progress_bar, self.log_queue)
-            
+            EmailService.send_emails(
+                self.logged_in_email, self.app_password, messages, 
+                self.progress_bar, self.log_queue
+            ) 
+
             messagebox.showinfo("Success", "All emails sent successfully!")
             self.log_queue.put("🎉 SYSTEM: All emails sent successfully!\n")
 
