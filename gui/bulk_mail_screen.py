@@ -4,10 +4,29 @@ from tkinter import ttk
 import pandas as pd
 import queue
 import os
+import re
+import dns.resolver
 from services.email_service import EmailService
 from services.database_service import DatabaseService
 from utils.threading_utils import start_thread
 
+def check_email(email):
+    """Validates email syntax and MX record"""
+    if not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email):
+        return False
+
+    domain = email.split("@")[1]
+    
+    try:
+        records = dns.resolver.resolve(domain, "MX")
+        return True if records else False
+    except dns.resolver.NoAnswer:
+        return False
+    except dns.resolver.NXDOMAIN:
+        return False
+    except Exception as e:
+        return False
+   
 class BulkMailScreen:
     def __init__(self, root, logged_in_email, app_password):
         self.root = root
@@ -91,6 +110,11 @@ class BulkMailScreen:
 
             messages = []
             for _, row in df.iterrows():
+                email = row["Email"].strip()
+                if not check_email(email):
+                    self.log_queue.put(f"❌ Invalid Email: {email}\n")
+                    continue
+
                 personalized_body = body_template
                 for column in columns:
                     placeholder = f"{{{column}}}"
