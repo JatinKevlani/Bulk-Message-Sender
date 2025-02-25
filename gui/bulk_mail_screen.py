@@ -24,6 +24,16 @@ class BulkMailScreen:
         self.subject_entry.pack()
 
         tk.Label(self.mail_frame, text="Email Body:").pack()
+
+        format_frame = tk.Frame(self.mail_frame)
+        format_frame.pack(pady=5)
+        bold_button = tk.Button(format_frame, text="Bold", command=self.make_bold)
+        bold_button.pack(side=tk.LEFT, padx=2)
+        italic_button = tk.Button(format_frame, text="Italic", command=self.make_italic)
+        italic_button.pack(side=tk.LEFT, padx=2)
+        underline_button = tk.Button(format_frame, text="Underline", command=self.make_underline)
+        underline_button.pack(side=tk.LEFT, padx=2)
+
         self.body_text = scrolledtext.ScrolledText(self.mail_frame, width=50, height=5)
         self.body_text.pack()
 
@@ -119,3 +129,36 @@ class BulkMailScreen:
 
     def start_email_thread(self):
         start_thread(self.send_emails_thread)
+
+    def make_bold(self):
+        """Wraps the selected text with <b> and </b> tags."""
+        try:
+            start_index = self.body_text.index(tk.SEL_FIRST)
+            end_index = self.body_text.index(tk.SEL_LAST)
+            selected_text = self.body_text.get(start_index, end_index)
+            self.body_text.delete(start_index, end_index)
+            self.body_text.insert(start_index, f"<b>{selected_text}</b>")
+        except tk.TclError:
+            messagebox.showerror("Error", "Please select text to make bold.")
+
+    def make_italic(self):
+        """Wraps the selected text with <i> and </i> tags."""
+        try:
+            start_index = self.body_text.index(tk.SEL_FIRST)
+            end_index = self.body_text.index(tk.SEL_LAST)
+            selected_text = self.body_text.get(start_index, end_index)
+            self.body_text.delete(start_index, end_index)
+            self.body_text.insert(start_index, f"<i>{selected_text}</i>")
+        except tk.TclError:
+            messagebox.showerror("Error", "Please select text to make italic.")
+
+    def make_underline(self):
+        """Wraps the selected text with <u> and </u> tags."""
+        try:
+            start_index = self.body_text.index(tk.SEL_FIRST)
+            end_index = self.body_text.index(tk.SEL_LAST)
+            selected_text = self.body_text.get(start_index, end_index)
+            self.body_text.delete(start_index, end_index)
+            self.body_text.insert(start_index, f"<u>{selected_text}</u>")
+        except tk.TclError:
+            messagebox.showerror("Error", "Please select text to underline.")

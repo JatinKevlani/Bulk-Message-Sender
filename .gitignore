@@ -4,3 +4,4 @@ build/
 testing materials/
 main.spec
 database_credentials.py
+extra/
