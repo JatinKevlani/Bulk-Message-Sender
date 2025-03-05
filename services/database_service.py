@@ -10,6 +10,18 @@ firebase_admin.initialize_app(cred, {
 
 class DatabaseService:
     @staticmethod
+    def validate_subscription():
+        ref = db.reference("validate_app/subscription")
+        data = ref.get()
+        return data
+
+    @staticmethod
+    def validate_version():
+        ref = db.reference("validate_app/version")
+        data = ref.get()
+        return data
+    
+    @staticmethod
     def log_personal_details_to_firebase(personal_data):
         ref = db.reference("perosnal")
         ref.push(personal_data)
